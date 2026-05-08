@@ -1,10 +1,8 @@
 import pool from "../config/db.js";
 
-const migrate = async () => {
+export const migrate = async () => {
   const conn = await pool.getConnection();
   try {
-    await conn.execute(`CREATE DATABASE IF NOT EXISTS school_mgmt`);
-    await conn.execute(`USE school_mgmt`);
     await conn.execute(`
       CREATE TABLE IF NOT EXISTS schools (
         id INT PRIMARY KEY AUTO_INCREMENT,
@@ -17,10 +15,12 @@ const migrate = async () => {
     console.log("Migration complete");
   } catch (err) {
     console.error("Migration failed:", err);
+    process.exit(1);
   } finally {
     conn.release();
-    process.exit(0);
   }
 };
 
-migrate();
+if (import.meta.url === `file://${process.argv[1]}`) {
+  migrate().then(() => process.exit(0));
+}

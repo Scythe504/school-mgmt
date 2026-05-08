@@ -24,19 +24,23 @@ export const addSchool = async (req, res) => {
       })
     }
     
-    const safeName = name.trim().toLowerCase(); 
+    const safeName = name.trim();
+    const safeAddress = address.trim();
     
     const [result] = await pool.execute(
       `INSERT INTO schools (name, address, latitude, longitude) VALUES (?, ?, ?, ?)`,
-      [safeName, address.trim(), latitude, longitude]
+      [safeName, safeAddress, latitude, longitude]
     )
     
     res.status(201).json({
-      id: result.insertId, 
-      safeName,
-      safeAddress,
-      latitude,
-      longitude,
+      message: "School added successfully",
+      school: {
+        id: result.insertId, 
+        name: safeName,
+        address: safeAddress,
+        latitude,
+        longitude,
+      }
     })
   } catch (error) {
     console.error(error)

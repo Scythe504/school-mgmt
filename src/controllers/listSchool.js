@@ -25,7 +25,7 @@ export const listSchools = async (req, res) => {
       })
     }
 
-    const [schools] = await pool.execute(`SELECT * FROM schools`);
+    const [schools] = await pool.execute(`SELECT id, name, address, latitude, longitude FROM schools`);
 
     const sorted = schools.map((school) => ({
       ...school,
